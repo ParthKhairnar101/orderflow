@@ -1,0 +1,41 @@
+services:
+  app:
+    build:
+      context: ./orderflow
+      dockerfile: Dockerfile
+    container_name: orderflow-app
+    environment:
+      ORDERFLOW_DB_URL: jdbc:postgresql://db:5432/orderflow
+      ORDERFLOW_DB_USERNAME: ${ORDERFLOW_DB_USERNAME:-orderflow}
+      ORDERFLOW_DB_PASSWORD: ${ORDERFLOW_DB_PASSWORD:-orderflow-local}
+      ORDERFLOW_ADMIN_USERNAME: ${ORDERFLOW_ADMIN_USERNAME:-admin}
+      ORDERFLOW_ADMIN_PASSWORD: ${ORDERFLOW_ADMIN_PASSWORD:-admin-local-only}
+      ORDERFLOW_OPERATOR_USERNAME: ${ORDERFLOW_OPERATOR_USERNAME:-operator}
+      ORDERFLOW_OPERATOR_PASSWORD: ${ORDERFLOW_OPERATOR_PASSWORD:-operator-local-only}
+      ORDERFLOW_DEMO_IDLE_TTL: ${ORDERFLOW_DEMO_IDLE_TTL:-PT20M}
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:17
+    container_name: orderflow-db
+    environment:
+      POSTGRES_DB: orderflow
+      POSTGRES_USER: ${ORDERFLOW_DB_USERNAME:-orderflow}
+      POSTGRES_PASSWORD: ${ORDERFLOW_DB_PASSWORD:-orderflow-local}
+    ports:
+      - "5433:5432"
+    volumes:
+      - orderflow-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  orderflow-postgres-data:

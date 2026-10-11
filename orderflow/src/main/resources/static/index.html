@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7f4">
+  <title>OrderFlow — Operations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div id="app-view" class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/"><span class="brand-mark">O</span><span>orderflow<span class="brand-period">.</span></span></a>
+      <div class="side-label">WORKSPACE</div>
+      <nav><a class="nav-link active" href="#overview"><span>◫</span> Overview</a><a class="nav-link" href="#catalog"><span>▦</span> Products</a><a class="nav-link" href="#orders"><span>↗</span> Orders <span id="nav-order-count" class="nav-count">0</span></a></nav>
+      <div class="sidebar-bottom"><div class="api-status"><span class="status-dot"></span><div><strong>Demo environment</strong><small>Changes reset after inactivity</small></div></div><div class="profile"><span class="avatar">D</span><div class="profile-copy"><strong>Guest operator</strong><small>No account required</small></div></div></div>
+    </aside>
+    <main class="main-content">
+      <header class="topbar"><div><span class="breadcrumb">PUBLIC PLAYGROUND <span>/</span> OVERVIEW</span><h1>Order & inventory workspace</h1></div><div class="topbar-actions"><button id="refresh-button" class="button button-light"><span>↻</span> Refresh</button><button id="reset-button" class="button button-light">↺ Reset demo</button></div></header>
+      <div class="demo-notice"><span><i class="status-dot"></i> Shared public sandbox — changes are visible to other visitors.</span><span>Auto-resets after inactivity <strong id="demo-countdown">20:00</strong></span></div>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+      <section id="overview" class="metric-grid">
+        <article class="metric-card"><div class="metric-label">CATALOG ITEMS <span class="metric-icon violet">▦</span></div><div id="metric-products" class="metric-value">—</div><div class="metric-note">Products in your catalog</div></article>
+        <article class="metric-card"><div class="metric-label">AVAILABLE UNITS <span class="metric-icon green">◉</span></div><div id="metric-units" class="metric-value">—</div><div class="metric-note">Ready to be reserved</div></article>
+        <article class="metric-card"><div class="metric-label">ACTIVE ORDERS <span class="metric-icon amber">↗</span></div><div id="metric-orders" class="metric-value">—</div><div class="metric-note">Awaiting fulfillment</div></article>
+        <article class="metric-card"><div class="metric-label">ORDER VALUE <span class="metric-icon blue">＄</span></div><div id="metric-value" class="metric-value">—</div><div class="metric-note">Total value of active orders</div></article>
+      </section>
+      <section class="workspace-grid">
+        <div class="panel catalog-panel" id="catalog">
+          <div class="panel-heading"><div><div class="eyebrow">INVENTORY</div><h2>Product catalog</h2><p class="panel-subtitle">Manage products and available stock.</p></div><button id="add-product-button" class="button button-primary">＋ Add product</button></div>
+          <div class="toolbar"><label class="search-box"><span>⌕</span><input id="product-search" type="search" placeholder="Search products or SKU…" aria-label="Search products"></label><span id="product-count" class="count-label">0 products</span></div>
+          <div class="table-wrap"><table><thead><tr><th>PRODUCT</th><th>SKU</th><th>PRICE</th><th>AVAILABLE</th><th></th></tr></thead><tbody id="product-rows"></tbody></table><div id="product-empty" class="empty-state" hidden><span class="empty-icon">▦</span><strong>No products yet</strong><p>Add your first product to start taking orders.</p></div></div>
+        </div>
+        <div class="panel checkout-panel">
+          <div class="panel-heading"><div><div class="eyebrow">CHECKOUT</div><h2>Create an order</h2><p class="panel-subtitle">Add products to reserve inventory.</p></div><span class="cart-icon">⌑</span></div>
+          <div id="cart-items" class="cart-items"><div class="cart-empty">Choose a product from your catalog to get started.</div></div>
+          <div class="cart-total"><span>Order total</span><strong id="cart-total">$0.00</strong></div>
+          <button id="checkout-button" class="button button-primary button-wide" disabled>Create order <span aria-hidden="true">→</span></button>
+          <p class="checkout-note"><span>↳</span> Stock is reserved automatically when the order is placed.</p>
+        </div>
+      </section>
+      <section id="orders" class="panel orders-panel">
+        <div class="panel-heading"><div><div class="eyebrow">FULFILLMENT</div><h2>Recent orders</h2><p class="panel-subtitle">Track order status and manage cancellations.</p></div><span id="orders-total" class="count-label">0 orders</span></div>
+        <div class="table-wrap"><table><thead><tr><th>ORDER</th><th>CREATED</th><th>ITEMS</th><th>TOTAL</th><th>STATUS</th><th></th></tr></thead><tbody id="order-rows"></tbody></table><div id="order-empty" class="empty-state" hidden><span class="empty-icon">↗</span><strong>No orders yet</strong><p>Your newly placed orders will show up here.</p></div></div>
+      </section>
+      <footer class="page-footer"><span>OrderFlow <span class="brand-period">·</span> Inventory in sync.</span><span>Transactional by design <span class="footer-spark">✳</span></span></footer>
+    </main>
+  </div>
+
+  <dialog id="product-dialog" class="modal"><form id="product-form" method="dialog"><div class="modal-heading"><div><div class="eyebrow">NEW CATALOG ITEM</div><h2>Add a product</h2></div><button class="icon-button modal-close" value="cancel" aria-label="Close">×</button></div><label>Product name<input name="name" required maxlength="255" placeholder="e.g. Mechanical Keyboard"></label><div class="form-row"><label>SKU<input name="sku" required maxlength="64" placeholder="e.g. KEY-1001"></label><label>Unit price<input name="unitPrice" type="number" min="0" step="0.01" required placeholder="79.99"></label></div><label>Available quantity<input name="availableQuantity" type="number" min="0" step="1" required placeholder="25"></label><label>Description <span class="optional">(optional)</span><textarea name="description" maxlength="2000" rows="3" placeholder="A short description for your team"></textarea></label><div id="product-form-error" class="form-error" role="alert"></div><div class="modal-actions"><button class="button button-light" value="cancel">Cancel</button><button id="save-product-button" class="button button-primary" value="default">Save product</button></div></form></dialog>
+</body>
+</html>

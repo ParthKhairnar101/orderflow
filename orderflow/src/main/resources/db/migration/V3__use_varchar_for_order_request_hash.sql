@@ -1,0 +1,2 @@
+ALTER TABLE orders
+    ALTER COLUMN request_hash TYPE VARCHAR(64);
