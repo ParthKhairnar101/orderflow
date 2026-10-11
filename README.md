@@ -24,6 +24,8 @@ The demo opens without an account and starts with three sample products. Visitor
 
 ## Screenshot
 
+<img width="1920" height="1020" alt="image" src="https://github.com/user-attachments/assets/a7be5cc0-a37d-443c-90f5-4d541c186e8f" />
+
 <!-- Add your screenshot here after committing it, for example:
 ![OrderFlow dashboard](docs/images/orderflow-dashboard.png)
 -->
