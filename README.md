@@ -2,9 +2,11 @@
 
 **OrderFlow** is a Java 21 / Spring Boot order and inventory application. It demonstrates transactional stock reservation, idempotent order creation, optimistic locking, role-based API access, versioned database migrations, and PostgreSQL integration testing.
 
+> **Render free-tier note:** Render’s free web service sleeps after 15 minutes without inbound traffic, so a first visit after a quiet spell can take about a minute to wake.
+
 ## Live demo
 
-The public demo is being deployed. It will be linked here when deployment is complete.
+The deployment URL is added to this repository's GitHub page.
 
 The demo opens without an account and starts with three sample products. Visitors can add products, adjust inventory, place orders, and cancel them. The playground is shared, clearly labeled, and isolated from the protected API's data. It resets after 20 minutes without demo activity; the **Reset demo** button resets it immediately for everyone.
 
@@ -19,6 +21,12 @@ The demo opens without an account and starts with three sample products. Visitor
 - Consistent API errors using RFC 9457 problem details.
 - Flyway-managed PostgreSQL schema and Testcontainers-backed integration tests.
 - Responsive browser console served by Spring Boot from the same origin as the API.
+
+## Screenshot
+
+<!-- Add your screenshot here after committing it, for example:
+![OrderFlow dashboard](docs/images/orderflow-dashboard.png)
+-->
 
 ## Technology
 
